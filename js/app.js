@@ -41,8 +41,12 @@ function init() {
  * which will be called after everything has run successfully.
  */
  function loadFeed(id, cb) {
-     var feedUrl = allFeeds[id].url,
-         feedName = allFeeds[id].name;
+     if (id <= allFeeds.length - 1) {
+       var feedUrl = allFeeds[id].url,
+           feedName = allFeeds[id].name;
+     } else {
+       throw new RangeError('Feed id is outside range of allFeeds array');
+     }
 
      $.ajax({
        type: "POST",
@@ -65,9 +69,13 @@ function init() {
                   * entryTemplate (created above using Handlebars) and append
                   * the resulting HTML to the list of entries on the page.
                   */
-                 entries.forEach(function(entry) {
-                     container.append(entryTemplate(entry));
-                 });
+                  if (entries != null && entriesLen > 0) {
+                   entries.forEach(function(entry) {
+                       container.append(entryTemplate(entry));
+                   });
+                 } else {
+                   throw new Error('There are no entries in this feed');
+                }
 
                  if (cb) {
                      cb();
@@ -78,6 +86,8 @@ function init() {
                  if (cb) {
                      cb();
                  }
+
+                 throw new Error('There was an error loading feeds: ' + err);
                },
        dataType: "json"
      });
