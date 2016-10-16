@@ -41,6 +41,7 @@ function init() {
  * which will be called after everything has run successfully.
  */
  function loadFeed(id, cb) {
+     //ensure the id for the loaded feed is a valid index in the allFeeds array
      if (id <= allFeeds.length - 1) {
        var feedUrl = allFeeds[id].url,
            feedName = allFeeds[id].name;

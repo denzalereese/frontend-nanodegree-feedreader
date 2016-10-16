@@ -1,48 +1,152 @@
 # Project Overview
 
-In this project you are given a web-based application that reads RSS feeds. The original developer of this application clearly saw the value in testing, they've already included [Jasmine](http://jasmine.github.io/) and even started writing their first test suite! Unfortunately, they decided to move on to start their own company and we're now left with an application with an incomplete test suite. That's where you come in.
+In this project I was given a web-app that reads RSS feeds as starter code, and tasked with writing tests for this code.
 
+##Technologies used
+###[Jasmine]('http://jasmine.github.io/')
 
-## Why this Project?
+*A Behavor-Driven Development Framework for Testing JavaScript*
 
-Testing is an important part of the development process and many organizations practice a standard of development known as "test-driven development". This is when developers write tests first, before they ever start developing their application. All the tests initially fail and then they start writing application code to make these tests pass.
+##Usage
+In order to use the app, click the menu button in the top left corner to show the menu with a list of available feeds. Click on one of the links in the menu to change the current feed.
 
-Whether you work in an organization that uses test-driven development or in an organization that uses tests to make sure future feature development doesn't break existing features, it's an important skill to have!
+##Testing
 
+1.) Ensured each object in the ```allFeeds``` array has a defined ```name``` and ```url```.
 
-## What will I learn?
+~~~~
+	 it('have defined URLs', function() {
+	     allFeeds.forEach(function(feed) {
+		     expect(feed.url).toBeDefined();
+		     expect(feed.url.length).not.toBe(0);
+	     });
+     });
+~~~~
 
-You will learn how to use Jasmine to write a number of tests against a pre-existing application. These will test the underlying business logic of the application as well as the event handling and DOM manipulation.
+~~~~
+	 it('have defined names', function() {
+     	allFeeds.forEach(function(feed) {
+            expect(feed.name).toBeDefined();
+            expect(feed.name.length).not.toBe(0);
+       });
+     });
+~~~~
 
+2.) Wrote a new test suite described as "The menu".
 
-## How will this help my career?
+~~~~
+	describe('The menu', function() {
+		//will test menu functionality
+	});
+~~~~
 
-* Writing effective tests requires analyzing multiple aspects of an application including the HTML, CSS and JavaScript - an extremely important skill when changing teams or joining a new company.
-* Good tests give you the ability to quickly analyze whether new code breaks an existing feature within your codebase, without having to manually test all of the functionality.
+3.) Ensured menu was hidden by default
 
+~~~~
+	it('is hidden by default', function() {
+   		expect($('body').hasClass('menu-hidden')).toBe(true);
+    });
+~~~~
 
-# How will I complete this project?
+....and that its visibility is toggled on click.
 
-Review the Feed Reader Testing [Project Rubric](https://review.udacity.com/#!/projects/3442558598/rubric)
+~~~~
+	it('toggles visibility on click', function() {
+       $('.menu-icon-link').trigger('click');
+       expect($('body').hasClass('menu-hidden')).toBe(false);
+       $('.menu-icon-link').trigger('click');
+       expect($('body').hasClass('menu-hidden')).toBe(true);
+    });
+~~~~
 
-1. Take the JavaScript Testing [course](https://www.udacity.com/course/ud549)
-2. Download the [required project assets](http://github.com/udacity/frontend-nanodegree-feedreader).
-3. Review the functionality of the application within your browser.
-4. Explore the application's HTML (**./index.html**), CSS (**./css/style.css**) and JavaScript (**./js/app.js**) to gain an understanding of how it works.
-5. Explore the Jasmine spec file in **./jasmine/spec/feedreader.js** and review the [Jasmine documentation](http://jasmine.github.io).
-6. Edit the `allFeeds` variable in **./js/app.js** to make the provided test fail and see how Jasmine visualizes this failure in your application.
-7. Return the `allFeeds` variable to a passing state.
-8. Write a test that loops through each feed in the `allFeeds` object and ensures it has a URL defined and that the URL is not empty.
-9. Write a test that loops through each feed in the `allFeeds` object and ensures it has a name defined and that the name is not empty.
-10. Write a new test suite named `"The menu"`.
-11. Write a test that ensures the menu element is hidden by default. You'll have to analyze the HTML and the CSS to determine how we're performing the hiding/showing of the menu element.
-12. Write a test that ensures the menu changes visibility when the menu icon is clicked. This test should have two expectations: does the menu display when clicked and does it hide when clicked again.
-13. Write a test suite named `"Initial Entries"`.
-14. Write a test that ensures when the `loadFeed` function is called and completes its work, there is at least a single `.entry` element within the `.feed` container.
-15. Write a test suite named `"New Feed Selection"`.
-16. Write a test that ensures when a new feed is loaded by the `loadFeed` function that the content actually changes.
-17. No test should be dependent on the results of another.
-18. Callbacks should be used to ensure that feeds are loaded before they are tested.
-19. Implement error handling for undefined variables and out-of-bound array access.
-20. When complete - all of your tests should pass. 
-21. Write a README file detailing all steps required to successfully run the application. If you have added additional tests (for Udacious Test Coverage),  provide documentation for what these future features are and what the tests are checking for.
+4.) Wrote a new test suite described as "Initial Entries".
+
+~~~~
+	describe('Initial Entries', function() {
+		/* will test that initial entries from feed
+		   are loaded successfuly */
+	});
+~~~~
+
+5.) Ensured there is at least a single entry in the feed container.
+
+~~~~
+	/* Since loadFeed() is an asynchronous function,
+      we must call it and make sure it is done working before our tests. */
+
+	   beforeEach(function(done) {
+        loadFeed(0, function() {
+          done();
+        });
+      });
+~~~~
+
+~~~~
+	it('should have at least one entry', function() {
+   		expect(('.feed').children().length).toBeGreaterThan(0);
+    });
+~~~~
+
+6.) Wrote a new test suite described as "New Feed Selection".
+
+~~~~
+	describe('New Feed Selection', function() {
+		/* will test that there are new entries loaded
+		   when a new feed is selected */
+	});
+~~~~
+
+7.) Ensured content changes when a new feed is loaded.
+
+~~~~
+	/* calls loadFeed(0) and gets the title of the first entry,
+	   then calls loadFeed(1) to load a new feed before each test. Uses done()
+	   since loadFeed() is an asynchronous function */
+
+	var initialFirstEntryTitle = "";
+      beforeEach(function(done) {
+        loadFeed(0, function() {
+          initialFirstEntryTitle = $('.title').first().text();
+          loadFeed(1, function() {
+            done();
+          });
+        });
+     });
+~~~~
+
+~~~~
+	/* checks if the title of the first entry has changed
+	after loadFeed(1) is done. */
+
+	it('should change content when a new feed is loaded', function() {
+           var nextFirstEntryTitle = $('.title').first().text();
+		   expect(initialFirstEntryTitle == nextFirstEntryTitle).toBe(false);
+    });
+~~~~
+
+##Error Handling
+
+1.) Throw error if ```id``` passed in to the ```loadFeed()``` function is outside the index bounds of the ```allFeeds``` array
+
+~~~~
+	function loadFeed(id, cb) {
+     //ensure the id for the loaded feed is a valid index in the allFeeds array
+     if (id <= allFeeds.length - 1) {
+       var feedUrl = allFeeds[id].url,
+           feedName = allFeeds[id].name;
+     } else {
+       throw new RangeError('Feed id is outside range of allFeeds array');
+     }
+~~~~
+
+2.) Throw error if ```result.feed.entries``` is null or empty
+
+~~~~
+	if (entries != null && entriesLen > 0) {
+       entries.forEach(function(entry) {
+       	container.append(entryTemplate(entry));
+        });
+        } else {
+        	throw new Error('There are no entries in this feed');
+     }
+~~~~

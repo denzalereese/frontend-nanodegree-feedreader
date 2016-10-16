@@ -78,6 +78,8 @@ $(function() {
 
     /* TODO: Write a new test suite named "Initial Entries" */
     describe('Initial Entries', function() {
+      /* Since loadFeed() is an asynchronous function,
+      we must call it and make sure it is done working before our tests. */
       beforeEach(function(done) {
         loadFeed(0, function() {
           done();
@@ -96,6 +98,9 @@ $(function() {
       });
     // TODO: Write a new test suite named "New Feed Selection"
     describe('New Feed Selection', function() {
+      /* calls loadFeed(0) and gets the title of the first entry,
+	       then calls loadFeed(1) to load a new feed before each test. Uses done()
+	      since loadFeed() is an asynchronous function */
       var initialFirstEntryTitle = "";
       beforeEach(function(done) {
         loadFeed(0, function() {
@@ -111,6 +116,7 @@ $(function() {
          */
 
          it('should change content when a new feed is loaded', function() {
+           //checks if the title of the first entry has changed after loadFeed(1) is done.
            var nextFirstEntryTitle = $('.title').first().text();
            expect(initialFirstEntryTitle == nextFirstEntryTitle).toBe(false);
          });
