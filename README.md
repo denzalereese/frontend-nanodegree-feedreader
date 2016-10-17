@@ -2,6 +2,8 @@
 
 In this project I was given a web-app that reads RSS feeds as starter code, and tasked with writing tests for this code.
 
+To open, clone/download the repo and open 'index.html' in your browser.
+
 ##Technologies used
 ###[Jasmine]('http://jasmine.github.io/')
 
