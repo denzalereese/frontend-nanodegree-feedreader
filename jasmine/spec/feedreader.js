@@ -43,14 +43,14 @@ $(function() {
     describe('The menu', function() {
 
         it('is hidden by default', function() {
-            expect($('body').hasClass('menu-hidden')).toBe(true);
+            expect($('body').hasClass('menu-hidden')).toBeTruthy();
         });
 
         it('toggles visibility on click', function() {
             $('.menu-icon-link').trigger('click');
-            expect($('body').hasClass('menu-hidden')).toBe(false);
+            expect($('body').hasClass('menu-hidden')).toBeFalsy();
             $('.menu-icon-link').trigger('click');
-            expect($('body').hasClass('menu-hidden')).toBe(true);
+            expect($('body').hasClass('menu-hidden')).toBeTruthy();
         });
     });
 
@@ -58,13 +58,11 @@ $(function() {
         /* Since loadFeed() is an asynchronous function,
         we must call it and make sure it is done working before our tests. */
         beforeEach(function(done) {
-            loadFeed(0, function() {
-                done();
-            });
+            loadFeed(0, done());
         });
 
         it('should have at least one entry', function() {
-            expect($('.feed').children().length).toBeGreaterThan(0);
+            expect($('.feed .entry')).toBeTruthy();
         });
     });
 
@@ -85,7 +83,7 @@ $(function() {
         it('should change content when a new feed is loaded', function() {
             //checks if the title of the first entry has changed after loadFeed(1) is done.
             var nextFirstEntryTitle = $('.title').first().text();
-            expect(initialFirstEntryTitle == nextFirstEntryTitle).toBe(false);
+            expect(initialFirstEntryTitle).not.toBe(nextFirstEntryTitle);
         });
     });
 
