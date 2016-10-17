@@ -58,11 +58,13 @@ $(function() {
         /* Since loadFeed() is an asynchronous function,
         we must call it and make sure it is done working before our tests. */
         beforeEach(function(done) {
-            loadFeed(0, done());
+            loadFeed(0, function() {
+              done();
+            });
         });
 
         it('should have at least one entry', function() {
-            expect($('.feed .entry')).toBeTruthy();
+            expect($('.feed .entry').length).not.toBeLessThan(1);
         });
     });
 
